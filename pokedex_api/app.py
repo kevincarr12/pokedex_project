@@ -62,12 +62,6 @@ def updateTrainer(id_trainer):
 
 @app.route('/trainer/<int:id_trainer>', methods=['DELETE'])
 def deleteTrainer(id_trainer):
-	
-	
-	return jsonify({'message':'Trainer deleted successfully'})
-
-@app.route('/trainer/<int:id_trainer>', methods=['DELETE'])
-def deleteTrainer(id_trainer)
 	return jsonify({'message':'Method under work'})
 
 # TRAINER SECTION ENDS
@@ -115,7 +109,7 @@ def updatePokemon(id_pokemon):
 	return jsonify({'message':'Pokemon updated successfully'})
 
 @app.route('/pokemon/<int:id_pokemon>', methods=['DELETE'])
-def deletePokemon(id_pokemon)
+def deletePokemon(id_pokemon):
 	return jsonify({'message':'Method under work'})
 
 # POKEMON SECTION ENDS
@@ -169,8 +163,8 @@ def updatePokedex(id_pokedex):
 
 	return jsonify({'message':'Pokedex updated successfully'})
 
-@app.route('/pokedex/<int;id_pokedex>' methods=['DELETE'])
-def deletePokedex(id_pokedex)
+@app.route('/pokedex/<int:id_pokedex>', methods=['DELETE'])
+def deletePokedex(id_pokedex):
 	return jsonify({'message':'Method under work'})
 
 # POKEDEX SECTION ENDS
