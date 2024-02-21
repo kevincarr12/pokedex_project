@@ -62,7 +62,12 @@ def updateTrainer(id_trainer):
 
 @app.route('/trainer/<int:id_trainer>', methods=['DELETE'])
 def deleteTrainer(id_trainer):
-	return jsonify({'message':'Method under work'})
+	cur = mysql.connection.cursor()
+	cur.execute('''DELETE FROM trainer WHERE id_trainer =  %s''', (id_trainer,))
+	cur.connection.commit()
+	cur.close()
+
+	return jsonify({'message':'Trainer deleted successfully'})
 
 # TRAINER SECTION ENDS
 
@@ -110,7 +115,12 @@ def updatePokemon(id_pokemon):
 
 @app.route('/pokemon/<int:id_pokemon>', methods=['DELETE'])
 def deletePokemon(id_pokemon):
-	return jsonify({'message':'Method under work'})
+	cur = mysql.connection.cursor()
+	cur.execute('''DELETE FROM pokemon WHERE id_pokemon = %s''',(id_pokemon,))
+	mysql.connection.commit()
+	cur.close()
+
+	return jsonify({'message':'Pokemon deleted successfully'})
 
 # POKEMON SECTION ENDS
 
@@ -165,7 +175,12 @@ def updatePokedex(id_pokedex):
 
 @app.route('/pokedex/<int:id_pokedex>', methods=['DELETE'])
 def deletePokedex(id_pokedex):
-	return jsonify({'message':'Method under work'})
+	cur = mysql.connection.cursor()
+	cur.execute('''DELETE FROM pokedex WHERE id_pokedex = %s''', (id_pokedex,))
+	mysql.connection.commit()
+	cur.close()
+
+	return jsonify({'message':'Pokedex entry deleted successfully'})
 
 # POKEDEX SECTION ENDS
 
