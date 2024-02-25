@@ -2,13 +2,46 @@ from flask import Blueprint
 from http import HTTPStatus
 from flasgger import swag_from
 from api.controllers.trainer import trainerController
+from api.schema.trainer import trainerSchema, trainers_schema
 
 trainer_bp = Blueprint('trainer',__name__, url_prefix='/trainer')
 
+@swag_from({
+	'responses': {
+		HTTPStatus.OK.value: {
+			'description':'Select all Trainers',
+			'schema': trainerSchema
+		}
+	}
+})
 @trainer_bp.route('/')
 def trainers():
+	'''
+	Get All Trainers
+	This method returns all the trainers registered
+	'''
 	tr = trainerController
-	return tr.getTrainers()
+	resultTrainer = tr.trainers()
+	return trainers_schema.dump(resultTrainer)
+
+@swag_from({
+	'responses': {
+		HTTPStatus.OK.value: {
+			'description':'Select a specific trainer',
+			'schema': trainerSchema
+		}
+	}
+})
+@trainer_bp.route('/<int:id_trainer>')
+def getTrainer(id_trainer):
+	'''
+	Get a specific trainer
+	This method returns a specific trainer called by its id_trainer
+	'''
+	tr = trainerController
+	resultTrainer = tr.getTrainer(id_trainer)
+
+	return trainers_schema.dump(resultTrainer)
 
 # TRAINER SECTION
 # @app.route('/trainer', methods=['GET'])

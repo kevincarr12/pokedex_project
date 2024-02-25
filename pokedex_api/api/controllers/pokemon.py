@@ -1,32 +1,32 @@
 from api.model.models import Pokemon, db
-from flask import jsonify
+from api.schema.pokemon import pokemonSchema, pokemons_schema, pokemon_schema
 
 class pokemonController():
-	def getPokemon():
+
+
+	def pokemon():
 		session: sqlalchemy.orm.scoping.scoped_session = db.session
 		pokemon = session.query(Pokemon).order_by(Pokemon.id_pokemon).all()
 
-		return jsonify(pokemon=pokemon)
+		return pokemon
+
+	def getPokemon(id_pokemon):
+		session: sqlalchemy.orm.scoping.scoped_session = db.session
+		pokemon = session.query(Pokemon).filter(Pokemon.id_pokemon.in_([id_pokemon]))
+
+		return pokemon
+
+	def addPokemon(name, description):
+		session: sqlalchemy.orm.scoping.scoped_session = db.session
+		pokemon = Pokemon()
+		pokemon.name = name
+		pokemon.description = description
+		db.session.add(pokemon)
+		db.session.commit()
+
+		return pokemon
 
 #POKEMON SECTION
-
-# @app.route('/pokemon', methods=['GET'])
-# def getPokemons():
-# 	cur = mysql.connection.cursor()
-# 	cur.execute('SELECT * FROM pokemon')
-# 	data = cur.fetchall()
-# 	cur.close()
-
-# 	return jsonify(data)
-
-# @app.route('/pokemon/<int:id_pokemon>', methods=['GET'])
-# def getPokemon(id_pokemon):
-# 	cur = mysql.connection.cursor()
-# 	cur.execute('SELECT id_pokemon, name, description FROM pokemon WHERE id_pokemon = %s',(id_pokemon,))
-# 	data = cur.fetchall()
-# 	cur.close()
-	
-# 	return jsonify(data)
 
 # @app.route('/pokemon', methods=['POST'])
 # def setPokemon():
