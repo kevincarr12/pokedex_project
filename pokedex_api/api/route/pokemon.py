@@ -59,3 +59,41 @@ def addPokemon():
 	newPokemon = pokemon.addPokemon(name, description)
 
 	return pokemon_schema.dump(newPokemon), 201
+
+@swag_from({
+	'response':{
+		HTTPStatus.OK.value: {
+			'description':'Update a Pokemon',
+			'schema':pokemonSchema
+		}
+	}
+})
+@pokemon_bp.route('/<int:id_pokemon>', methods=['PUT'], strict_slashes=False)
+def updatePokemon(id_pokemon):
+	'''
+	Update any Pokemon name or description, given the id_pokemon
+	'''
+	name = request.json['name'] 
+	description = request.json['description']
+	pokemon = pokemonController
+	updatePokemon = pokemon.updatePokemon(id_pokemon, name, description)
+
+	return pokemon_schema.dump(updatePokemon), 200
+
+@swag_from({
+	'response':{
+		HTTPStatus.OK.value: {
+			'description':'Delete a Pokemon',
+			'schema': pokemonSchema
+		}
+	}
+})
+@pokemon_bp.route('/<int:id_pokemon>', methods=['DELETE'])
+def deletePokemon(id_pokemon):
+	'''
+	Delete any Pokemon given the id_pokemon
+	'''
+	pokemon = pokemonController
+	deletePokemon = pokemon.deletePokemon(id_pokemon)
+
+	return pokemon_schema.dump(deletePokemon), 200

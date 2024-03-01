@@ -26,37 +26,16 @@ class pokemonController():
 
 		return pokemon
 
-#POKEMON SECTION
+	def updatePokemon(id_pokemon, name, description):
+		session: sqlalchemy.orm.scoping.scoped_session = db.session
+		pokemon = session.query(Pokemon).filter(Pokemon.id_pokemon == id_pokemon).update({'name':name, 'description':description})
+		db.session.commit()
 
-# @app.route('/pokemon', methods=['POST'])
-# def setPokemon():
-# 	cur = mysql.connection.cursor()
-# 	name = request.json['name']
-# 	description  = request.json['description']
-# 	cur.execute('INSERT INTO pokemon (name, description) VALUES (%s, %s)', (name, description,))
-# 	mysql.connection.commit()
-# 	cur.close()
-	
-# 	return jsonify({'message':'Pokemon created successfully'})
+		return pokemon
 
-# @app.route('/pokemon/<int:id_pokemon>', methods=['PUT'])
-# def updatePokemon(id_pokemon):
-# 	cur  = mysql.connection.cursor()
-# 	name = request.json['name']
-# 	description = request.json['description']
-# 	cur.execute('UPDATE pokemon SET name = %s, description = %s WHERE id_pokemon = %s', (name, description, id_pokemon,))
-# 	mysql.connection.commit()
-# 	cur.close()
+	def deletePokemon(id_pokemon):
+		session: sqlalchemy.orm.scoping.scoped_session = db.session
+		pokemon = session.query(Pokemon).filter(Pokemon.id_pokemon == id_pokemon).delete()
+		db.session.commit()
 
-# 	return jsonify({'message':'Pokemon updated successfully'})
-
-# @app.route('/pokemon/<int:id_pokemon>', methods=['DELETE'])
-# def deletePokemon(id_pokemon):
-# 	cur = mysql.connection.cursor()
-# 	cur.execute('''DELETE FROM pokemon WHERE id_pokemon = %s''',(id_pokemon,))
-# 	mysql.connection.commit()
-# 	cur.close()
-
-# 	return jsonify({'message':'Pokemon deleted successfully'})
-
-# POKEMON SECTION ENDS
+		return pokemon
