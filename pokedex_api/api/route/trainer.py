@@ -1,8 +1,8 @@
-from flask import Blueprint
+from flask import Blueprint, request
 from http import HTTPStatus
 from flasgger import swag_from
 from api.controllers.trainer import trainerController
-from api.schema.trainer import trainerSchema, trainers_schema
+from api.schema.trainer import trainerSchema, trainers_schema, trainer_schema
 
 trainer_bp = Blueprint('trainer',__name__, url_prefix='/trainer')
 
@@ -14,7 +14,7 @@ trainer_bp = Blueprint('trainer',__name__, url_prefix='/trainer')
 		}
 	}
 })
-@trainer_bp.route('/')
+@trainer_bp.route('/', methods=['GET'])
 def trainers():
 	'''
 	Get All Trainers
@@ -22,7 +22,7 @@ def trainers():
 	'''
 	tr = trainerController
 	resultTrainer = tr.trainers()
-	return trainers_schema.dump(resultTrainer)
+	return trainers_schema.dump(resultTrainer), 200
 
 @swag_from({
 	'responses': {
@@ -32,7 +32,7 @@ def trainers():
 		}
 	}
 })
-@trainer_bp.route('/<int:id_trainer>')
+@trainer_bp.route('/<int:id_trainer>', methods=['GET'])
 def getTrainer(id_trainer):
 	'''
 	Get a specific trainer
@@ -41,57 +41,64 @@ def getTrainer(id_trainer):
 	tr = trainerController
 	resultTrainer = tr.getTrainer(id_trainer)
 
-	return trainers_schema.dump(resultTrainer)
+	return trainers_schema.dump(resultTrainer), 200
 
-# TRAINER SECTION
-# @app.route('/trainer', methods=['GET'])
-# def getTrainers():
-# 	cur = mysql.connection.cursor()
-# 	cur.execute('SELECT * FROM trainer')
-# 	data = cur.fetchall()
-# 	cur.close()
+@swag_from({
+	'responses':{
+		HTTPStatus.OK.value: {
+			'message':'Add a new trainer',
+			'schema': trainerSchema
+		}
+	}
+})
+@trainer_bp.route('/', methods=['POST'], strict_slashes=False)
+def addTrainer():
+	'''
+	Add a new trainer
+	Providing name and start_date('mm-dd-yyyy')
+	'''
+	name = request.json['name']
+	start_date = request.json['start_date']
+	tr = trainerController
+	newTrainer = tr.addTrainer(name, start_date)
 
-# 	return jsonify(data)
+	return trainers_schema.dump(newTrainer), 201
 
-# @app.route('/trainer/<int:id_trainer>', methods=['GET'])
-# def getTrainer(id_trainer):
-# 	cur = mysql.connection.cursor()
-# 	cur.execute('SELECT id_trainer, name, start_date FROM trainer WHERE id_trainer = %s', (id_trainer,))
-# 	data = cur.fetchall()
-# 	cur.close()
+@swag_from({
+	'responses': {
+		HTTPStatus.OK.value: {
+			'message':'Modify an existing trainer',
+			'schema':trainerSchema
+		}
+	}
+})
+@trainer_bp.route('/<int:id_trainer>', methods=['PUT'], strict_slashes=False)
+def updateTrainer(id_trainer):
+	'''
+	Modify an existing trainer specified by the id_trainer
+	Updatable fields: name, start_date
+	'''
+	name = request.json['name']
+	start_date = request.json['start_date']
+	tr = trainerController
+	updateTrainer = tr.updateTrainer(id_trainer, name, start_date)
 
-# 	return jsonify(data)
+	return trainer_schema.dump(updateTrainer), 200	
 
-# @app.route('/trainer', methods=['POST'])
-# def setTrainer():
-# 	cur = mysql.connection.cursor()
-# 	name = request.json['name']
-# 	start_date  = request.json['start_date']
-# 	cur.execute('INSERT INTO trainer (name, start_date) VALUES (%s, %s)', (name, start_date,))
-# 	mysql.connection.commit()
-# 	cur.close()
-	
-# 	return jsonify({'message':'Trainer created successfully'})
+@swag_from({
+	'responses':{
+		HTTPStatus.OK.value:{
+			'message':'Delete a trainer',
+			'schema':trainerSchema
+		}
+	}	
+})
+@trainer_bp.route('/<int:id_trainer>', methods=['DELETE'])
+def deleteTrainer(id_trainer):
+	'''
+	Delete a specific trainer by its id_trainer
+	'''
+	trainer = trainerController
+	deleteTrainer = trainer.deleteTrainer(id_trainer)
 
-# @app.route('/trainer/<int:id_trainer>', methods=['PUT'])
-# def updateTrainer(id_trainer):
-# 	cur  = mysql.connection.cursor()
-# 	name = request.json['name']
-# 	start_date = request.json['start_date']
-# 	cur.execute('UPDATE trainer SET name = %s, start_date = %s WHERE id_trainer = %s', (name, start_date, id_trainer,))
-# 	mysql.connection.commit()
-# 	cur.close()
-
-# 	return jsonify({'message':'Trainer updated successfully'})
-
-# @app.route('/trainer/<int:id_trainer>', methods=['DELETE'])
-# def deleteTrainer(id_trainer):
-# 	cur = mysql.connection.cursor()
-# 	cur.execute('''DELETE FROM trainer WHERE id_trainer =  %s''', (id_trainer,))
-# 	cur.connection.commit()
-# 	cur.close()
-
-# 	return jsonify({'message':'Trainer deleted successfully'})
-
-# TRAINER SECTION ENDS
-
+	return trainer_schema.dump(deleteTrainer), 200

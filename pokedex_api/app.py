@@ -97,6 +97,6 @@ def createApp():
 # POKEDEX SECTION ENDS
 
 if __name__ == '__main__':
-	app.run(debug=True)
+	app.run()
 
 app = createApp()

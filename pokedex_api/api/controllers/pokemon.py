@@ -1,5 +1,5 @@
 from api.model.models import Pokemon, db
-from api.schema.pokemon import pokemonSchema, pokemons_schema, pokemon_schema
+# from api.schema.pokemon import pokemonSchema, pokemons_schema, pokemon_schema
 
 class pokemonController():
 
@@ -19,8 +19,10 @@ class pokemonController():
 	def addPokemon(name, description):
 		session: sqlalchemy.orm.scoping.scoped_session = db.session
 		pokemon = Pokemon()
-		pokemon.name = name
-		pokemon.description = description
+		if(name):
+			pokemon.name = name
+		if(description):
+			pokemon.description = description
 		db.session.add(pokemon)
 		db.session.commit()
 
